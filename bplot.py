@@ -42,8 +42,8 @@ def hist2d(datax, datay, deltax=None, deltay=None):
 	print "Init matrix"
 	matrix = np.zeros((n_binx+1, n_biny+1))
 	print "Compute indexes to be incremented"
-	xidx = ((datax - datax.min()) / deltax).astype(int)
-	yidx = ((datay - datay.min()) / deltay).astype(int)
+	xidx = np.sort(((datax - datax.min()) / deltax).astype(int))
+	yidx = np.sort(((datay - datay.min()) / deltay).astype(int))
 	
 	total = len(xidx) * len(yidx)
 	print "Start loop of ", len(xidx), " x ", len(yidx), " = ", total, " elements"
@@ -119,7 +119,7 @@ class dataO(object):
 		self.counts = self.counts / (1.*self.counts.sum()*self.delta)
 	def percentile(self, which):
 		return np.percentile(self.data, which)
-	def minPercentile(self, which):
+	def myPercentile(self, which):
 		# Wikipedia definition
 		idx = int(np.ceil((which / 100.) * self.data.size))
 		return np.sort(data["s"].data)[idx]
@@ -172,15 +172,10 @@ out_file.write(to_json(dataOut))
 out_file.flush()
 out_file.close()
 
-print "create matrix"
-matrix = hist2d(data["s"].data, data["bkg"].data)
-
-print "store matrix"
-np.savetxt("matrix.csv", matrix, delimiter=",")
-
-print "show matrix"
-plt.imshow(matrix)
-
+hist2D, xedges, yedges = numpy.histogram2d(data["s"].data, data["bkg"].data, bins=50)
+hist2D = numpy.transpose(hist2D)
+plt.pcolormesh(xedges, yedges, hist2D, cmap=plt.cm.gray)
+plt.contour(hist2D, extent=[xedges.min(),xedges.max(),yedges.min(),yedges.max()])
 
 
 
