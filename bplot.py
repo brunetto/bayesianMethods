@@ -14,9 +14,43 @@ def sm_hist(data, delta=5, n_bin=None, range_=None):
 	bin_edges = np.hstack((bin_edges[0], bin_edges))
 	return counts, bin_edges
 
-INDENT = 4
-SPACE = " "
-NEWLINE = "\n"
+def sm_hist2(data, delta=5):
+	dataMin = np.floor(data.min())
+	dataMax = np.ceil(data.max())
+	n_bin = np.ceil(1.*(dataMax-dataMin) / delta) + 1
+	idxs = ((data  - dataMin) / delta).astype(int)
+	counts = np.zeros(n_bin+1) # n_bin+1: see last line before return
+	edges = np.hstack((dataMin, np.arange(dataMin, dataMax+delta, delta)))#changed from dataMax+1
+	for idx in idxs: 
+		counts[idx+1] += 1# added +1, check
+	counts[-1] = 0 # to close the sm_hist line in veusz, but it's already zero
+	return counts, edges
+
+def hist2d(datax, datay, deltax=None, deltay=None):
+	n_binx = 0
+	n_biny = 0
+	if deltax == None or deltay == None:
+		print "Delta are none, set delta from n_bin=50"
+		n_binx=50
+		n_biny=50
+		deltax = ((datax.max()-datax.min()) / (1.*n_binx))
+		deltay = ((datay.max()-datay.min()) / (1.*n_biny))
+	else:
+		print "Compute n_bin"
+		n_binx = np.ceil(1.*(datax.max()-datax.min()) / deltax)
+		n_biny = np.ceil(1.*(datay.max()-datay.min()) / deltay)
+	print "Init matrix"
+	matrix = np.zeros((n_binx+1, n_biny+1))
+	print "Compute indexes to be incremented"
+	xidx = ((datax - datax.min()) / deltax).astype(int)
+	yidx = ((datay - datay.min()) / deltay).astype(int)
+	print "Start loop of ", len(xidx), " x ", len(yidx), " = ", len(xidx) * len(yidx), " elements"
+	
+	for i in range(len(xidx)):
+		for j in range(len(yidx)):
+			matrix[xidx[i], yidx[j]] +=1
+		print "\rDone ", i*len(yidx),
+	return matrix
 
 def to_json(o, level=0):
 	"""
@@ -24,6 +58,10 @@ def to_json(o, level=0):
 	by [Jeff Terrace](http://jeffterrace.com/).
 	Brunetto Ziosi added the sorted.
 	"""
+	INDENT = 4
+	SPACE = " "
+	NEWLINE = "\n"
+
 	ret = ""
 	if isinstance(o, dict):
 		ret += "{" + NEWLINE
@@ -57,6 +95,7 @@ def to_json(o, level=0):
 class dataO(object):
 	def __init__(self, name, data=None):
 		self.name = name
+		self.label = name
 		if data is not None:
 			self.idxs = data["idx"]
 			self.data = data["data"]
@@ -66,7 +105,8 @@ class dataO(object):
 		return self.mean, self.std
 	def freqs(self, delta=None):
 		if delta == None:
-			self.delta = ((self.data.max()-self.data.min()) / 50.)
+			n_bin = 50
+			self.delta = ((self.data.max()-self.data.min()) / (1.*n_bin))
 		else:
 			self.delta = delta
 		if self.delta == 0:
@@ -99,7 +139,9 @@ for var in idxs:
 	data[var[0]] = dataO(var[0], dataAll[var["start"]-1:var["stop"]])
 
 
+dataOut = {}
 
+percentile = 95
 
 for key in data.keys():
 	# Calcolare la media e deviazione standard di una sequenza di valori (p.e. s del file allegato
@@ -108,8 +150,35 @@ for key in data.keys():
 	
 	# Calcolare l’intervallo pi ́u corto che racchiude l’x % dei valori (p.e. s del file allegato ha
 	# un intervallo al 95 % che va da 0 a 56)
-	for key in data.keys():
-		data[key].freqs()
+	print "Compute histogram"
+	data[key].freqs()
+	
+	print "Create json data"
+	dataOut[data[key].name + ":" + "label"] = data[key].label
+	dataOut[data[key].name + ":" + "idxs"] = data[key].idxs
+	dataOut[data[key].name + ":" + "data"] = data[key].data
+	dataOut[data[key].name + ":" + "mean"] = data[key].mean
+	dataOut[data[key].name + ":" + "std"] = data[key].std
+	dataOut[data[key].name + ":" + "percentile:" + str(percentile)] = data[key].percentile(percentile)
+	dataOut[data[key].name + ":" + "bins"] = data[key].bins
+	dataOut[data[key].name + ":" + "counts"] = data[key].counts
+
+print "store to json"
+out_file = open("bplots.json","w")
+out_file.write(to_json(dataOut))
+out_file.flush()
+out_file.close()
+
+print "create matrix"
+matrix = hist2d(data["s"].data, data["bkg"].data)
+
+print "store matrix"
+np.savetxt("matrix.csv", matrix, delimiter=",")
+
+print "show matrix"
+plt.imshow(matrix)
+
+
 
 
 #• a) importare nell’ambiente grafico files i files di output di JAGS. Prendete come esempio
@@ -180,10 +249,7 @@ for key in data.keys():
 
 
 
-out_file = open("bplots.json","w")
-out_file.write(to_json(dataOut))
-out_file.flush()
-out_file.close()
+
 
 
 
