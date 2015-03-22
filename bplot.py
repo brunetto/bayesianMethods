@@ -44,12 +44,15 @@ def hist2d(datax, datay, deltax=None, deltay=None):
 	print "Compute indexes to be incremented"
 	xidx = ((datax - datax.min()) / deltax).astype(int)
 	yidx = ((datay - datay.min()) / deltay).astype(int)
-	print "Start loop of ", len(xidx), " x ", len(yidx), " = ", len(xidx) * len(yidx), " elements"
+	
+	total = len(xidx) * len(yidx)
+	print "Start loop of ", len(xidx), " x ", len(yidx), " = ", total, " elements"
 	
 	for i in range(len(xidx)):
 		for j in range(len(yidx)):
 			matrix[xidx[i], yidx[j]] +=1
-		print "\rDone ", i*len(yidx),
+		print "\rDone ", (100.*i*len(yidx) / total), " % ",
+	print "\n"
 	return matrix
 
 def to_json(o, level=0):
