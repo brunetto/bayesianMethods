@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-03-24T16:38:14.194473
+# Saved at 2015-03-24T23:15:17.535228
 
 AddImportPath('/home/ziosi/Dropbox/DCode/Bayesian/neutrino')
 ImportString('`m:bins`(numeric)','''
@@ -2128,6 +2128,8 @@ ImportString('`m:idxs`(numeric)','''
 ''')
 Add('page', name='page1', autoadd=False)
 To('page1')
+Set('width', '20cm')
+Set('height', '10cm')
 Add('grid', name='grid1', autoadd=False)
 To('grid1')
 Set('rows', 1)
@@ -2169,3 +2171,14 @@ To('..')
 To('..')
 To('..')
 Add('page', name='page2', autoadd=False)
+To('page2')
+Set('width', '20cm')
+Set('height', '10cm')
+Add('grid', name='grid1', autoadd=False)
+To('grid1')
+Set('rows', 1)
+Set('columns', 2)
+Set('leftMargin', '0cm')
+Set('bottomMargin', '0cm')
+To('..')
+To('..')
