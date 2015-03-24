@@ -1,0 +1,5 @@
+model
+{
+m ~ dunif(0,10)
+obsm ~ dnorm(m, 0.25)
+}

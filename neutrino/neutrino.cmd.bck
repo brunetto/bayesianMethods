@@ -1,0 +1,12 @@
+model in neutrino.bug
+data in neutrino.dat
+compile, nchains(3) 			# run the program 3 times to avoid stalling chains, infinity etc.
+initialize 						# find where to star
+update 1000 					# discard the first 10^3 steps to not depend on the starting point
+monitor set obsm, thin(10) 		# I want to store myvar once every 10 step (in MC codes near values are correlated)
+update 10000 					# sampling of the posterior
+coda * 							# default output names
+data to useddata				# for debugging purpose
+samplers to usedsamplers		# 
+
+# jags < neutrino.cmd
