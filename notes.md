@@ -40,7 +40,7 @@ When you fit an (x, y), why do you assume a linear relation?
 
 Everything is gaussian.  
 
-model: p(x|y,s^2) = gauss(x|y,s^2) = ...
+model: $p(x|y,s^2) = gauss(x|y,s^2) = ...$
 experiment: put a top model
 
 Usually the likelyhood and the posterior are basically the same (they are superimposed).
@@ -50,7 +50,7 @@ The reason is that the prior usually is very "flat".
 
 In the case of the neutrino mass the likelyhood and the posterior are different.
 
-n^0 -> p^+ + e^- + nu_e
+$n^0 -> p^+ + e^- + nu_e$
 
 (bad way, small quantity as difference of large ones)
 
