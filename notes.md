@@ -228,11 +228,30 @@ Run with:
 * 60, 3000, 100 # ???
 * 170, 172, 1
 
+### Combine data with different backgrounds (different observations)
+
+But how can I have the same counts for the source?
+
+```
+model {
+	for (i in 1:length(obstot)) {
+		obstot[i] ~ dpois (s+bkg[i] / C[i])
+		obsbkg ~ dpois(bkg)
+		...
+		
+	
+	}
 
 
 
+}
 
+```
 
+### Homework
+
+* consider the case of 40 measurements: is the posterior
+narrower than the case of 1 obs?
 
 
 
