@@ -1,2 +1,2 @@
 # bayesianMethods
-My baesyan methouds course note and excercises
+My baesyan methods course note and excercises
