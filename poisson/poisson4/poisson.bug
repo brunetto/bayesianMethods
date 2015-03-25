@@ -1,0 +1,4 @@
+model {
+obsn ~ dpois(s)
+s ~ dunif(0, 1.0e+7)
+}

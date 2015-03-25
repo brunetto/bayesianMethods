@@ -4,6 +4,7 @@ by Stefano Andreon
 
 Material [here](http://www.brera.mi.astro.it/~andreon/) 
 
+## First day
 
 * Probability is in  [0,1]
 * P = 0, P = 1
@@ -87,6 +88,7 @@ My_var <-(
 
 ```
 * model: logical relationship between stuffs
+
 ```
 # comment, but is better to not use it
 model
@@ -127,5 +129,33 @@ samplers to usedsamplers		#
 jags < my_script.cmd
 ```
 if the 3 chains are different you need to skip more than 1000 initial values
+
+## Second day
+
+### Homework
+
+* trace plot
+* change the prior
+* change the discarded values
+* overplot the analytical posterior
+* check the 90% upper limit (should be ~1.7)
+
+### Poissonian
+
+```
+model {
+obsn ~ dpois(s)
+s~ dunif(0, 1.0e+7)
+}
+
+#### Add data
+
+model {
+for (i in 
+	1:length(obsn)) {
+		obsn[i] ~ dpois(s)
+	}
+	s ~ dunif(0,1.0e+7)
+}
 
 
