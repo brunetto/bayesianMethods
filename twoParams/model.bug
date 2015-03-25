@@ -1,0 +1,7 @@
+model {
+	obstot ~ dpois(s+bkg/C) 
+	obsbkg ~ dpois(bkg)
+	s ~ dunif(0,1.0e+2)
+	bkg ~ dunif(0,1.0e+2)
+}
+

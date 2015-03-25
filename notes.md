@@ -158,4 +158,85 @@ for (i in
 	s ~ dunif(0,1.0e+7)
 }
 
+FIXME: where does it put the two extimate?
+
+### Binomial
+
+model {
+obsn ~ dbin(f, n)
+f ~ dbeta(1,1)
+}
+
+### Prior
+
+The prior is always important, but in Bayesian analysis is a piece, so you can't forget it.
+Examples: masses are positive, ...
+
+**Malmquist-Eddington bias**: is the equivalent of the prior with another name.
+
+Prior as power law because nature produces few big stuffs and many small ones.
+
+p(mu|4) = c * p(4|mu) p(mu)
+
+p(mu) = mu^{-beta}
+
+We find that if the prior is a power law, the most probable value for an observation of 
+4 photons is 1.5!
+
+```
+model {
+obss ~ spois(s)
+s <- pow(tmps, -0.666666666666666666666) # euclidean counts, but power law is called Pareto distro
+tmps ~ dunif(0, 10000)
+
+obss <- 4
+```
+
+Prior is important but do not be too anxious!
+What matters is the gross shape of the prior where likelyhood is > 0.
+The precise shape does not matter.
+
+```
+model {
+# likelyhood
+obsn ~ dpois(s)
+# Gauss prior
+s ~ dnorm(0,0.01) T(0,) # truncate
+# uniform prior
+s ~ dunif(0,1.0e+7)
+}
+
+```
+
+### Background
+
+```
+model {
+	obstot ~ dpois(s+bkg/C) # C is the solid angle
+	obsbkg ~ dpois(bkg)
+	s ~ dunif(0,1.0e+2)
+	bck ~ dunif(0,1.0e+2)
+}
+```
+
+Run with: 
+
+* s+bkg, bkg, C (solid angle)
+* 31, 1, 1
+* 60, 30, 1 <- facciamo questo
+* 60, 1, 1/30 # like neutrinos where you can't observe the Background
+* 60, 3000, 100 # ???
+* 170, 172, 1
+
+
+
+
+
+
+
+
+
+
+
+
 

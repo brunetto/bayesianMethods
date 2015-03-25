@@ -138,6 +138,9 @@ for infile in ["CODAchain1.txt", "CODAchain2.txt", "CODAchain3.txt"]:
 			print var[0], " duplicated! Exit!"
 			sys.exit(1)
 		data[var[0]] = dataO(var[0], dataAll[var["start"]-1:var["stop"]])
+		
+		plt.plot(data[var[0]].idxs, data[var[0]].data)
+		plt.show()
 
 	document = ve.Embedded("doc_1")
 

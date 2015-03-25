@@ -1,0 +1,6 @@
+model {
+obsn ~ dpois(s)
+s ~ dnorm(0,0.01) T(0,) 
+#s ~ dunif(0,1.0e+7)
+}
+

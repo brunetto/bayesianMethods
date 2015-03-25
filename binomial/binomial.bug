@@ -1,0 +1,4 @@
+model {
+obsn ~ dbin(f,n)
+s ~ dbeta(1,1)
+}
