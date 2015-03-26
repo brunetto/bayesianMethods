@@ -1,0 +1,7 @@
+model {
+for (i in
+  1:length(obsn) ) {
+obsn[i] ~ dpois(s)
+}
+s ~ dunif(0,1.0e7)
+}
